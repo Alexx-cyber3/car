@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Price Predictor & Lab Notebook</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; text-align: center; margin: 0; }
+        .tabs { display: flex; justify-content: center; margin-bottom: 20px; }
+        .tab-btn { background-color: #ddd; border: none; padding: 10px 20px; cursor: pointer; font-size: 16px; margin: 0 5px; border-radius: 5px 5px 0 0; }
+        .tab-btn.active { background-color: #28a745; color: white; }
+        .tab-content { display: none; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+        .tab-content.active { display: block; }
+        .container { max-width: 400px; margin: auto; }
+        h2 { color: #333; }
+        input, select { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button.submit-btn { background-color: #28a745; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; width: 100%; }
+        button.submit-btn:hover { background-color: #218838; }
+        h3 { color: #007bff; margin-top: 20px; }
+        iframe { width: 100%; height: 85vh; border: none; border-radius: 8px; }
+        
+        /* Specific styling for the notebook tab so it's wide */
+        #notebook.active { max-width: 90%; padding: 10px; }
+    </style>
+</head>
+<body>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab(event, 'predictor')">Price Predictor</button>
+        <button class="tab-btn" onclick="showTab(event, 'notebook')">Research Notebook</button>
+    </div>
+
+    <!-- Predictor Tab -->
+    <div id="predictor" class="tab-content active">
+        <div class="container">
+            <h2>Used Car Price Predictor</h2>
+            <form action="/predict" method="POST">
+                <input type="text" name="Car_Name" placeholder="Car Name (e.g., Honda City, Swift)" required>
+                <input type="number" name="Year" placeholder="Year of Purchase (e.g. 2015)" required>
+                <input type="number" step="any" name="Present_Price" placeholder="Current Showroom Price (in Lakhs)" required>
+                <input type="number" name="Kms_Driven" placeholder="Kilometers Driven" required>
+                <input type="number" name="Owner" placeholder="Number of Previous Owners (0, 1, 2)" required>
+                <select name="Fuel_Type" required>
+                    <option value="" disabled selected>Select Fuel Type</option>
+                    <option value="Petrol">Petrol</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="CNG">CNG</option>
+                </select>
+                <select name="Seller_Type" required>
+                    <option value="" disabled selected>Select Seller Type</option>
+                    <option value="Dealer">Dealer</option>
+                    <option value="Individual">Individual</option>
+                </select>
+                <select name="Transmission" required>
+                    <option value="" disabled selected>Select Transmission</option>
+                    <option value="Manual">Manual</option>
+                    <option value="Automatic">Automatic</option>
+                </select>
+                <button type="submit" class="submit-btn">Predict Selling Price</button>
+            </form>
+            
+            {% if prediction_text %}
+                <h3>{{ prediction_text }}</h3>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Notebook Tab -->
+    <div id="notebook" class="tab-content">
+        <iframe src="/analysis"></iframe>
+    </div>
+
+    <script>
+        function showTab(evt, tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Show the clicked tab content and set button as active
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
